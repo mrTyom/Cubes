@@ -14,6 +14,12 @@ class Game:
         # Начальное значение максимального счёта
         self.max_score = 0
         
+        # Начальный счёт партии
+        self.record = 0
+        
+        # Начальный ход
+        self.i = 0
+        
     
     @staticmethod
     def cubeCount(cubeSet):
@@ -157,31 +163,25 @@ class Game:
     def start(self):
         ''' Розыгрыш партии '''
 
-        # Начальный счёт партии
-        record = 0
-
-        # Начальный ход
-        i = 0
-
         print('Новая партия')
 
         # Цикл до победных очков
-        while record < WIN:
+        while self.record < WIN:
 
-            i += 1
+            self.i += 1
 
             # Цикл по очерёдности игроков
             for player in self.playerSet:
                 
-                score = 0
                 step  = 0
 
-                print(f'Ход №{i} игрока {player.name}')
+                print(f'Ход №{self.i} игрока {player.name}')
 
                 # Цикл по количеству бросков
                 while step < STEPS:
                     
                     step += 1
+                    score = 0
 
                     # Розыгрыш
                     score, cubeSetCount = self.raffle(CUBES)
@@ -202,6 +202,6 @@ class Game:
                     print('Всего: ', player.score)
 
             # Определение максимального счёта
-            record = self.maxScore()
+            self.record = self.maxScore()
             
             
