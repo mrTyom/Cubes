@@ -11,8 +11,8 @@ class Game:
         # Массив игроков
         self.playerSet = playerSet
         
-        # Начальное значение максимального счёта
-        self.max_score = 0
+        # Победитель
+        self.winner = None
         
         # Начальный счёт партии
         self.record = 0
@@ -135,11 +135,9 @@ class Game:
         for player in self.playerSet:
 
             # Проверим, является ли текущий счёт игрока новым максимумом
-            if player.score > self.max_score:
-                max_score = player.score
-
-        self.max_score = max_score
-        return max_score
+            if player.score > self.record:
+                self.record = player.score
+                self.winner = player
     
     
     def raffle(self, cubes):
@@ -202,6 +200,6 @@ class Game:
                     print('Всего: ', player.score)
 
             # Определение максимального счёта
-            self.record = self.maxScore()
+            self.maxScore()
             
-            
+        return self.winner

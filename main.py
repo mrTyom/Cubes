@@ -16,4 +16,6 @@ if __name__ == "__main__":
     game = Game(playerSet)
 
     # Запуск игры
-    game.start()
+    winner = game.start()
+    
+    print('Победитель: ', winner.name)
