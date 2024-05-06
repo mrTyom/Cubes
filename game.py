@@ -1,4 +1,6 @@
 import random
+import pandas as pd
+
 
 from settings import CUBES, EDGES, STEPS, WIN
 
@@ -10,6 +12,9 @@ class Game:
         
         # Массив игроков
         self.playerSet = playerSet
+        
+        # Табель 
+        self.table = pd.DataFrame(columns=['Player', 'Score'])
         
         # Победитель
         self.winner = None
@@ -131,13 +136,12 @@ class Game:
     def maxScore(self):
         ''' Определение максимального счёта у игроков '''
 
-        # Пройдемся по каждому игроку в playerSet
-        for player in self.playerSet:
+        # Сгруппировать данные по игрокам и вычислить сумму очков каждого игрока
+        player_scores = self.table.groupby('Player')['Score'].sum()
 
-            # Проверим, является ли текущий счёт игрока новым максимумом
-            if player.score > self.record:
-                self.record = player.score
-                self.winner = player
+        # Найти игрока с максимальной суммой очков
+        self.winner = player_scores.idxmax()
+        self.record = player_scores[self.winner]
     
     
     def raffle(self, cubes):
@@ -149,11 +153,9 @@ class Game:
 
         # Подсчёт одинаковых кубиков
         cubeSetCount = self.cubeCount(cubeSet)
-        print('Подсчёт: ', cubeSetCount)
 
         # Подсчёт суммы очков
         score = self.grade(cubeSetCount)
-        print('Очки: ', score)
 
         return score, cubeSetCount
 
@@ -173,8 +175,6 @@ class Game:
                 
                 step  = 0
 
-                print(f'Ход №{self.i} игрока {player.name}')
-
                 # Цикл по количеству бросков
                 while step < STEPS:
                     
@@ -183,7 +183,6 @@ class Game:
 
                     # Розыгрыш
                     score, cubeSetCount = self.raffle(CUBES)
-                    print('Очки: ', score)
 
                     # Определение небитки
                     if self.checkStrike(cubeSetCount):
@@ -195,11 +194,21 @@ class Game:
                         step = STEPS
                         print('Булка')
 
-                    # Суммирование очков игрока
-                    player.score += score
-                    print('Всего: ', player.score)
+                    # Создание строки для табеля
+                    new_row = pd.DataFrame({
+                        'Player'        : [player.name] ,
+                        'Score'         : [score]       ,
+                        'Step'          : [step]        ,
+                        'Move'          : [self.i]      ,
+                        'cubeSetCount'  : [cubeSetCount]
+                    })
+                    
+                    # Добавление новой строки в табель
+                    self.table = pd.concat([self.table, new_row], ignore_index=True)
 
             # Определение максимального счёта
             self.maxScore()
             
+        print(self.table)
+        
         return self.winner

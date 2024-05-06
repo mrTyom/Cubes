@@ -5,5 +5,3 @@ class Player:
         
         self.name       = name
         self.strategy   = strategy
-        
-        self.score      = 0
