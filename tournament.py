@@ -32,8 +32,6 @@ class Tournament():
             # Запуск игры
             winner = game.start()
             
-            print('Победитель: ', winner)
-            
             # Создание строки для турнирной таблицы
             new_row = pd.DataFrame({
                 'Tour'      : [i]       ,
@@ -52,4 +50,11 @@ class Tournament():
 
     def report(self):
         ''' Печать отчёта '''
+        
         print(self.statistics)
+        
+        # Группируем данные по игрокам и считаем количество уникальных значений в столбце "winner"
+        winner_count = self.statistics.groupby('winner').size()
+
+        print("Количество выигранных партий каждым игроком:")
+        print(winner_count)

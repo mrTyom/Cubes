@@ -162,8 +162,6 @@ class Game:
     def start(self):
         ''' Розыгрыш партии '''
 
-        print('Новая партия')
-
         # Цикл до победных очков
         while self.record < WIN:
 
@@ -209,7 +207,11 @@ class Game:
 
             # Определение максимального счёта
             self.maxScore()
-            
-        print(self.table)
         
         return self.winner
+    
+    
+    def report(self):
+        ''' Печать отчёта '''
+        
+        print(self.table)
