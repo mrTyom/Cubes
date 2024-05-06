@@ -13,24 +13,24 @@ class Tournament():
         # Турнирная таблица
         self.statistics = pd.DataFrame()
     
+        # Создаем игроков
+        playerA = Player("Жадный")
+        playerB = Player("Прозорливый")
+        
+        # Добавляем их в массив
+        self.playerSet = [playerA, playerB]
+        
     
     def start(self):
         ''' Запуск турнира '''
         
         for i in range(TOURS):
 
-            # Создаем экземпляры класса Player с передачей имени и стратегии
-            playerA = Player("Жадный")
-            playerB = Player("Прозорливый")
-            
-            # Добавляем их в массив
-            playerSet = [playerA, playerB]
-            
             # Создание игры
-            game = Game(playerSet)
+            self.game = Game(self.playerSet)
 
             # Запуск игры
-            winner = game.start()
+            winner = self.game.start()
             
             # Создание строки для турнирной таблицы
             new_row = pd.DataFrame({
