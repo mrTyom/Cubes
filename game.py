@@ -92,35 +92,15 @@ class Game:
     def checkStrike(cubeCount):
         ''' Определение небитки '''
 
-        check = False
-
-        # Копирование сета, чтобы при удалении ключа он не мешал итерации
         keys_to_remove = cubeCount.copy()
 
         for key, value in cubeCount.items():
-            
-            if value == 5:
+            if value in [5, 4, 3, 2]:
+                del keys_to_remove[key]
+            elif value == 1 and key in [1, 5]:
                 del keys_to_remove[key]
 
-            if value == 4:
-                del keys_to_remove[key]
-
-            if value == 3:
-                del keys_to_remove[key]
-
-            if value == 2:
-                del keys_to_remove[key]
-            
-            if value == 1:
-                if key == 1:
-                    del keys_to_remove[key]
-                if key == 5:
-                    del keys_to_remove[key]
-
-        if not keys_to_remove:
-            check = True
-
-        return check
+        return not keys_to_remove
 
     
     @staticmethod
@@ -190,6 +170,8 @@ class Game:
                     cf = self.checkFoul(score)
                     if cf:
                         step = STEPS
+
+                    # TODO: Добавить условие
 
                     # Принятие решения - записать очки?
                     if player.strategy.solutionTake(score):
