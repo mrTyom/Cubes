@@ -73,12 +73,16 @@ class Tournament():
     def report(self):
         ''' Печать отчёта '''
         
+        print("Процент выигранных партий каждым игроком:")
+        
         # Группируем данные по игрокам и считаем количество уникальных значений в столбце "winner"
         winner_count = self.statistics.groupby('winner').size()
 
-        print("Количество выигранных партий каждым игроком:")
-        total_games = winner_count.sum()  # Общее количество игр
+        # Общее количество игр
+        total_games = winner_count.sum()  
 
-        # Вычисляем процентное соотношение, округляем до десятых и выводим результат
+        # Вычисляем процентное соотношение, округляем до десятых
         winner_percentage = (winner_count / total_games * 100).round(decimals=1)
+        
+        # и выводим результат
         print(winner_percentage.sort_values(ascending=False))
