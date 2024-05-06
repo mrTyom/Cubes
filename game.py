@@ -191,6 +191,12 @@ class Game:
                     if cf:
                         step = STEPS
 
+                    # Принятие решения - записать очки?
+                    pass
+                    
+                    # Принятие решения - отложить очки?
+                    pass
+
                     # Создание строки для табеля
                     new_row = pd.DataFrame({
                         'Move'          : [self.i]      ,
