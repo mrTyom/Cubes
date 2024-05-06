@@ -149,7 +149,6 @@ class Game:
 
         # Бросок кубкиков
         cubeSet = self.roll(cubes)
-        print('Расклад: ', cubeSet)
 
         # Подсчёт одинаковых кубиков
         cubeSetCount = self.cubeCount(cubeSet)
@@ -185,22 +184,24 @@ class Game:
                     score, cubeSetCount = self.raffle(CUBES)
 
                     # Определение небитки
-                    if self.checkStrike(cubeSetCount):
+                    cs = self.checkStrike(cubeSetCount)
+                    if cs:
                         step = 0
-                        print('Небитка')
 
                     # Определение булки
-                    if self.checkFoul(score):
+                    cf = self.checkFoul(score)
+                    if cf:
                         step = STEPS
-                        print('Булка')
 
                     # Создание строки для табеля
                     new_row = pd.DataFrame({
-                        'Player'        : [player.name] ,
-                        'Score'         : [score]       ,
-                        'Step'          : [step]        ,
                         'Move'          : [self.i]      ,
-                        'cubeSetCount'  : [cubeSetCount]
+                        'Step'          : [step]        ,
+                        'Player'        : [player.name] ,
+                        'cubeSetCount'  : [cubeSetCount],
+                        'Score'         : [score]       ,
+                        'checkStrike'   : [cs]          ,
+                        'checkFoul'     : [cf]          , 
                     })
                     
                     # Добавление новой строки в табель
