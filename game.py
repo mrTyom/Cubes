@@ -192,10 +192,13 @@ class Game:
                         step = STEPS
 
                     # Принятие решения - записать очки?
-                    pass
+                    if player.strategy.solutionTake(score):
+                        step = STEPS
+                        
                     
                     # Принятие решения - отложить очки?
-                    pass
+                    if player.strategy.solutionHold(cubeSetCount):
+                        pass
 
                     # Создание строки для табеля
                     new_row = pd.DataFrame({

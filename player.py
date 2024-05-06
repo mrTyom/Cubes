@@ -3,7 +3,12 @@ from abc import ABC, abstractmethod
 
 class Player:
 
-    def __init__(self, name, strategy=None):
+    def __init__(
+        self                    ,
+        name                    ,   # Имя игрока
+        strategy    =   None    ,   # Выбранная стратегия
+        threshold   =   5       ,   # Порог активации
+    ):
         ''' Конструктор игрока '''
         
         # Имя
@@ -25,6 +30,9 @@ class Player:
     
 class Strategy(ABC):
     ''' Интерфейс стратегии '''
+    def __init__(self, threshold=5):
+        super().__init__()
+        self.threshold = threshold
     
     @abstractmethod
     def solutionTake(self, score):
@@ -51,7 +59,7 @@ class CautiousStrategy(Strategy):
     ''' Прозорливая стратегия '''
     
     def solutionTake(self, score):
-        if score > 30:
+        if score > self.threshold:
             return True
         else:
             return False
@@ -64,7 +72,7 @@ class HopnessStrategy(Strategy):
     ''' Надежда на небитку '''
     
     def solutionTake(self, score):
-        if score > 30:
+        if score > self.threshold:
             return True
         else:
             return False
