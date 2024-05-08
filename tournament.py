@@ -1,3 +1,5 @@
+import os
+import platform
 import pandas as pd
 
 from game import Game
@@ -50,9 +52,6 @@ class Tournament():
             # Запуск игры
             winner = self.game.start()
             
-            # Печать табелей
-            # self.game.report()
-            print(i)
             
             # Создание строки для турнирной таблицы
             new_row = pd.DataFrame({
@@ -68,6 +67,17 @@ class Tournament():
                 ],
                 ignore_index = True
             )
+ 
+            # Печать табелей
+            
+            # Определяем операционную систему
+            if platform.system() == 'Windows':
+                os.system('cls')  # Очистка экрана для Windows
+            else:
+                os.system('clear')  # Очистка экрана для Unix-подобных систем
+            
+            print("Тур: ", i)
+            self.report()
 
 
     def report(self):
