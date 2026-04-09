@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600">
+<rect width="100%" height="100%" fill="#FFFFFF" />
+<text x="500.0" y="36" text-anchor="middle" font-size="28" font-weight="700">Победы по игрокам</text>
+<line x1="180" y1="70" x2="180" y2="490" stroke="#111827" />
+<line x1="180" y1="490" x2="960" y2="490" stroke="#111827" />
+<line x1="180" y1="490.00" x2="960" y2="490.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="495.00" text-anchor="end" font-size="13">0.0</text><line x1="180" y1="406.00" x2="960" y2="406.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="411.00" text-anchor="end" font-size="13">0.6</text><line x1="180" y1="322.00" x2="960" y2="322.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="327.00" text-anchor="end" font-size="13">1.2</text><line x1="180" y1="238.00" x2="960" y2="238.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="243.00" text-anchor="end" font-size="13">1.8</text><line x1="180" y1="154.00" x2="960" y2="154.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="159.00" text-anchor="end" font-size="13">2.4</text><line x1="180" y1="70.00" x2="960" y2="70.00" stroke="#D1D5DB" stroke-dasharray="4 6" /><text x="165" y="75.00" text-anchor="end" font-size="13">3.0</text>
+<rect x="180" y="70.00" width="383" height="420.00" fill="#DC2626" rx="6" ry="6" /><rect x="577" y="210.00" width="383" height="280.00" fill="#DC2626" rx="6" ry="6" />
+<text x="371.50" y="545" text-anchor="end" font-size="14" transform="rotate(-35 371.50,545)">Бочкарь</text><text x="768.50" y="545" text-anchor="end" font-size="14" transform="rotate(-35 768.50,545)">Адаптивный</text>
+<text x="371.50" y="62.00" text-anchor="middle" font-size="13">3</text><text x="768.50" y="202.00" text-anchor="middle" font-size="13">2</text>
+</svg>

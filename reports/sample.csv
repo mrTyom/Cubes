@@ -1,0 +1,6 @@
+game,winner,rolls,turns,fouls,strikes,score::Жадный,strategy::Жадный,score::Адаптивный,strategy::Адаптивный,score::Бочкарь,strategy::Бочкарь
+1,Бочкарь,171,84,24,30,875,GreedyStrategy,930,AdaptiveStrategy,1055,BarrelAwareStrategy
+2,Адаптивный,180,95,28,28,605,GreedyStrategy,1010,AdaptiveStrategy,925,BarrelAwareStrategy
+3,Адаптивный,159,86,26,21,655,GreedyStrategy,1010,AdaptiveStrategy,755,BarrelAwareStrategy
+4,Бочкарь,184,102,37,17,690,GreedyStrategy,835,AdaptiveStrategy,1000,BarrelAwareStrategy
+5,Бочкарь,149,84,31,19,810,GreedyStrategy,800,AdaptiveStrategy,1005,BarrelAwareStrategy

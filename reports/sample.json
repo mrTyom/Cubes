@@ -1,0 +1,143 @@
+{
+  "summary": {
+    "total_games": 5,
+    "seed": 42,
+    "players": [
+      "Жадный",
+      "Адаптивный",
+      "Бочкарь"
+    ],
+    "player_specs": [
+      {
+        "name": "Жадный",
+        "strategy": "GreedyStrategy",
+        "threshold": 1
+      },
+      {
+        "name": "Адаптивный",
+        "strategy": "AdaptiveStrategy",
+        "threshold": 60
+      },
+      {
+        "name": "Бочкарь",
+        "strategy": "BarrelAwareStrategy",
+        "threshold": 55
+      }
+    ],
+    "average_score_by_player": {
+      "Жадный": 727.0,
+      "Адаптивный": 917.0,
+      "Бочкарь": 948.0
+    },
+    "winrate_by_player": {
+      "Жадный": 0.0,
+      "Адаптивный": 40.0,
+      "Бочкарь": 60.0
+    },
+    "winrate_by_strategy": {
+      "AdaptiveStrategy": 40.0,
+      "BarrelAwareStrategy": 60.0,
+      "GreedyStrategy": 0.0
+    },
+    "foul_rate_per_roll": 17.3,
+    "strike_rate_per_roll": 13.6,
+    "average_rolls_per_game": 168.6,
+    "average_turns_per_game": 90.2,
+    "fouls": 146,
+    "strikes": 115,
+    "rolls": 843,
+    "turns": 451
+  },
+  "games": [
+    {
+      "game": 1,
+      "winner": "Бочкарь",
+      "scores": {
+        "Жадный": 875,
+        "Адаптивный": 930,
+        "Бочкарь": 1055
+      },
+      "strategies": {
+        "Жадный": "GreedyStrategy",
+        "Адаптивный": "AdaptiveStrategy",
+        "Бочкарь": "BarrelAwareStrategy"
+      },
+      "rolls": 171,
+      "fouls": 24,
+      "strikes": 30,
+      "turns": 84
+    },
+    {
+      "game": 2,
+      "winner": "Адаптивный",
+      "scores": {
+        "Жадный": 605,
+        "Адаптивный": 1010,
+        "Бочкарь": 925
+      },
+      "strategies": {
+        "Жадный": "GreedyStrategy",
+        "Адаптивный": "AdaptiveStrategy",
+        "Бочкарь": "BarrelAwareStrategy"
+      },
+      "rolls": 180,
+      "fouls": 28,
+      "strikes": 28,
+      "turns": 95
+    },
+    {
+      "game": 3,
+      "winner": "Адаптивный",
+      "scores": {
+        "Жадный": 655,
+        "Адаптивный": 1010,
+        "Бочкарь": 755
+      },
+      "strategies": {
+        "Жадный": "GreedyStrategy",
+        "Адаптивный": "AdaptiveStrategy",
+        "Бочкарь": "BarrelAwareStrategy"
+      },
+      "rolls": 159,
+      "fouls": 26,
+      "strikes": 21,
+      "turns": 86
+    },
+    {
+      "game": 4,
+      "winner": "Бочкарь",
+      "scores": {
+        "Жадный": 690,
+        "Адаптивный": 835,
+        "Бочкарь": 1000
+      },
+      "strategies": {
+        "Жадный": "GreedyStrategy",
+        "Адаптивный": "AdaptiveStrategy",
+        "Бочкарь": "BarrelAwareStrategy"
+      },
+      "rolls": 184,
+      "fouls": 37,
+      "strikes": 17,
+      "turns": 102
+    },
+    {
+      "game": 5,
+      "winner": "Бочкарь",
+      "scores": {
+        "Жадный": 810,
+        "Адаптивный": 800,
+        "Бочкарь": 1005
+      },
+      "strategies": {
+        "Жадный": "GreedyStrategy",
+        "Адаптивный": "AdaptiveStrategy",
+        "Бочкарь": "BarrelAwareStrategy"
+      },
+      "rolls": 149,
+      "fouls": 31,
+      "strikes": 19,
+      "turns": 84
+    }
+  ]
+}
