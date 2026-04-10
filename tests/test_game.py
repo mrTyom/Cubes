@@ -4,9 +4,9 @@ import unittest
 from pathlib import Path
 
 from game import Game
-from player import Player, Strategy, TurnState
+from player import Player, STRATEGY_REGISTRY, Strategy, TurnState
 from plot_report import load_csv_report, load_json_report
-from tournament import Tournament, build_players, parse_strategy_spec
+from tournament import Tournament, build_player_specs, build_players, parse_strategy_spec
 
 
 class ScriptedGame(Game):
@@ -105,7 +105,7 @@ class GameRuleTests(unittest.TestCase):
 
         self.assertFalse(finished)
         self.assertEqual(player.total_score, 0)
-        self.assertTrue(game.history[-1]["checkFoul"])
+        self.assertTrue(game.history[-1]["check_foul"])
 
     def test_hold_reduces_cube_count_for_next_roll(self):
         player = Player("Нетерпеливый", strategy=MinimalHoldStrategy())
@@ -120,9 +120,9 @@ class GameRuleTests(unittest.TestCase):
 
         game.play_turn(player)
 
-        self.assertEqual(len(game.history[0]["Roll"]), 5)
-        self.assertEqual(len(game.history[1]["Roll"]), 4)
-        self.assertEqual(len(game.history[2]["Roll"]), 3)
+        self.assertEqual(len(game.history[0]["roll"]), 5)
+        self.assertEqual(len(game.history[1]["roll"]), 4)
+        self.assertEqual(len(game.history[2]["roll"]), 3)
 
     def test_strike_resets_throw_cycle_and_cube_count(self):
         player = Player("Осторожный", strategy=NoBankStrategy())
@@ -138,8 +138,8 @@ class GameRuleTests(unittest.TestCase):
 
         game.play_turn(player)
 
-        self.assertTrue(game.history[0]["checkStrike"])
-        self.assertEqual(len(game.history[1]["Roll"]), 5)
+        self.assertTrue(game.history[0]["check_strike"])
+        self.assertEqual(len(game.history[1]["roll"]), 5)
 
     def test_barrel_closes_when_player_reaches_target(self):
         player = Player("Жадный", strategy="GreedyStrategy")
@@ -188,6 +188,22 @@ class TournamentTests(unittest.TestCase):
         self.assertEqual(players[0].strategy_name, "GreedyStrategy")
         self.assertEqual(players[1].strategy.threshold, 90)
 
+    def test_build_player_specs_uses_registry_defaults(self):
+        specs = build_player_specs(["greedy", "barrel"])
+
+        self.assertEqual(
+            specs[0].threshold,
+            STRATEGY_REGISTRY["GreedyStrategy"].default_threshold,
+        )
+        self.assertEqual(
+            specs[1].threshold,
+            STRATEGY_REGISTRY["BarrelAwareStrategy"].default_threshold,
+        )
+
+    def test_unknown_strategy_raises_error(self):
+        with self.assertRaises(ValueError):
+            Player("Ошибка", strategy="NoSuchStrategy")
+
     def test_tournament_collects_summary_without_history(self):
         tournament = Tournament(
             tours=3,
@@ -199,11 +215,13 @@ class TournamentTests(unittest.TestCase):
         tournament.start()
         summary = tournament.build_summary()
 
-        self.assertEqual(summary["total_games"], 3)
+        self.assertEqual(summary["total_games"], 6)
         self.assertEqual(set(summary["players"]), {"Жадный", "Осторожный"})
         self.assertGreater(summary["rolls"], 0)
         self.assertIn("GreedyStrategy", summary["winrate_by_strategy"])
         self.assertIn("Жадный", summary["average_score_by_player"])
+        self.assertIn("Жадный", summary["average_turns_to_win_by_player"])
+        self.assertEqual(summary["games_by_player"]["Жадный"], 3)
         self.assertEqual(summary["seed"], 123)
 
     def test_tournament_is_reproducible_with_same_seed(self):
@@ -237,16 +255,20 @@ class TournamentTests(unittest.TestCase):
         tournament.export_csv(csv_path)
 
         json_payload = json.loads(json_path.read_text(encoding="utf-8"))
+        self.assertEqual(json_payload["schema_version"], 3)
         self.assertIn("summary", json_payload)
         self.assertEqual(json_payload["summary"]["seed"], 99)
-        self.assertEqual(len(json_payload["games"]), 2)
+        self.assertEqual(len(json_payload["games"]), 4)
+        self.assertIn("player", json_payload["games"][0])
+        self.assertIn("score", json_payload["games"][0])
 
         with csv_path.open("r", encoding="utf-8", newline="") as file:
             rows = list(csv.DictReader(file))
 
-        self.assertEqual(len(rows), 2)
-        self.assertIn("score::Жадный", rows[0])
-        self.assertIn("strategy::Адаптивный", rows[0])
+        self.assertEqual(len(rows), 4)
+        self.assertIn("player", rows[0])
+        self.assertIn("strategy", rows[0])
+        self.assertIn("score", rows[0])
 
     def test_summary_only_and_per_game_only_exports(self):
         tournament = Tournament(
@@ -281,7 +303,31 @@ class TournamentTests(unittest.TestCase):
         with csv_summary.open("r", encoding="utf-8", newline="") as file:
             summary_rows = list(csv.DictReader(file))
         self.assertEqual(summary_rows[0]["section"], "summary")
-        self.assertIn(summary_rows[0]["name"], {"total_games", "seed"})
+        self.assertIn(summary_rows[0]["name"], {"schema_version", "total_games", "seed"})
+        self.assertTrue(any(row["section"] == "average_turns_to_win_by_player" for row in summary_rows))
+
+    def test_show_game_history_exports_history_to_json(self):
+        tournament = Tournament(
+            tours=1,
+            strategy_specs=["greedy:1:Жадный", "barrel:55:Бочкарь"],
+            seed=7,
+            collect_game_history=True,
+        )
+        tournament.start()
+
+        export_dir = Path("tests") / "_artifacts"
+        export_dir.mkdir(exist_ok=True)
+        json_path = export_dir / "history_report.json"
+
+        self.addCleanup(lambda: json_path.unlink(missing_ok=True))
+
+        tournament.export_json(json_path)
+
+        payload = json.loads(json_path.read_text(encoding="utf-8"))
+        self.assertIn("history", payload["games"][0])
+        self.assertTrue(payload["games"][0]["history"])
+        self.assertIn("roll", payload["games"][0]["history"][0])
+        self.assertIn("check_foul", payload["games"][0]["history"][0])
 
     def test_plot_loaders_understand_json_and_csv_exports(self):
         tournament = Tournament(
@@ -306,9 +352,30 @@ class TournamentTests(unittest.TestCase):
         csv_summary, csv_games = load_csv_report(csv_path)
 
         self.assertEqual(json_summary["seed"], 101)
-        self.assertEqual(len(json_games), 2)
-        self.assertEqual(csv_summary["total_games"], 2)
-        self.assertEqual(len(csv_games), 2)
+        self.assertEqual(json_summary["schema_version"], 3)
+        self.assertEqual(len(json_games), 4)
+        self.assertEqual(csv_summary["total_games"], 4)
+        self.assertIn("average_turns_to_win_by_player", csv_summary)
+        self.assertEqual(len(csv_games), 4)
+
+    def test_plot_loader_understands_legacy_multi_player_csv_exports(self):
+        export_dir = Path("tests") / "_artifacts"
+        export_dir.mkdir(exist_ok=True)
+        legacy_csv = export_dir / "legacy_report.csv"
+
+        self.addCleanup(lambda: legacy_csv.unlink(missing_ok=True))
+
+        legacy_csv.write_text(
+            "game,winner,rolls,turns,fouls,strikes,score::Жадный,strategy::Жадный,score::Адаптивный,strategy::Адаптивный\n"
+            "1,Жадный,10,3,0,1,120,GreedyStrategy,90,AdaptiveStrategy\n",
+            encoding="utf-8",
+        )
+
+        summary, games = load_csv_report(legacy_csv)
+
+        self.assertEqual(summary["schema_version"], 1)
+        self.assertIn("Жадный", summary["average_score_by_player"])
+        self.assertEqual(len(games), 1)
 
 
 if __name__ == "__main__":
